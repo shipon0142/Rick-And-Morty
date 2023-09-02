@@ -1,0 +1,42 @@
+# Project exclude paths
+# Android Studio / IntelliJ IDEA
+*.iml
+.idea/
+
+# Gradle
+.gradle/
+build/
+
+# Gradle Wrapper
+gradle-wrapper.properties
+gradle-wrapper.jar
+
+# Android
+local.properties
+/.externalNativeBuild
+/captured/debug
+/captured/release
+*.apk
+*.ap_
+*.aab
+/build/
+/captures/
+/output/
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/gradle.xml
+/.idea/dictionaries
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/.name
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/modules
+
+# Keystore files
+*.jks
+
+# Android Studio navigation files
+.navigation/
