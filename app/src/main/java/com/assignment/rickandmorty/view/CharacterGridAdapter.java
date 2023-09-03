@@ -2,6 +2,7 @@ package com.assignment.rickandmorty.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class CharacterGridAdapter extends BaseAdapter {
-    Context context;
-    ArrayList<Result> results;
+    private final Context context;
+    private final ArrayList<Result> results;
+
 
     public CharacterGridAdapter(Context context, ArrayList<Result> results) {
         this.context = context;
@@ -65,6 +67,14 @@ public class CharacterGridAdapter extends BaseAdapter {
         nameTV.setText(results.get(position).getName());
         Picasso.get().load(results.get(position).getImage()).into(image);
         image.setClipToOutline(true);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, CharacterDetailsActivity.class);
+                intent.putExtra("character_id", results.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }
