@@ -18,7 +18,11 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainAppTheme"
+            android:windowSoftInputMode="adjustResize">
 
 
         </activity>

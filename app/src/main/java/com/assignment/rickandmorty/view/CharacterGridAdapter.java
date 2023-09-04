@@ -3,6 +3,8 @@ package com.assignment.rickandmorty.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.assignment.rickandmorty.R;
 import com.assignment.rickandmorty.databinding.AdapterCharecterBinding;
 import com.assignment.rickandmorty.repository.model.Result;
+import com.assignment.rickandmorty.utils.StatusColorCode;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -63,9 +67,16 @@ public class CharacterGridAdapter extends BaseAdapter {
 
         ImageView image = binding.imageIV;
         TextView nameTV = binding.nameTV;
-
+        TextView statusTV = binding.statusTV;
+        if (results.get(position).getStatus().equalsIgnoreCase("alive"))
+            statusTV.getBackground().setColorFilter(Color.parseColor(StatusColorCode.ALIVE_COLOR.getCode()), PorterDuff.Mode.SRC_ATOP);
+        else if (results.get(position).getStatus().equalsIgnoreCase("dead"))
+            statusTV.getBackground().setColorFilter(Color.parseColor(StatusColorCode.DEAD_COLOR.getCode()), PorterDuff.Mode.SRC_ATOP);
+        else
+            statusTV.getBackground().setColorFilter(Color.parseColor(StatusColorCode.UNKNOWN_COLOR.getCode()), PorterDuff.Mode.SRC_ATOP);
         nameTV.setText(results.get(position).getName());
-        Picasso.get().load(results.get(position).getImage()).into(image);
+        statusTV.setText(results.get(position).getStatus());
+        Picasso.get().load(results.get(position).getImage()).placeholder(R.drawable.character_placeholder).into(image);
         image.setClipToOutline(true);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

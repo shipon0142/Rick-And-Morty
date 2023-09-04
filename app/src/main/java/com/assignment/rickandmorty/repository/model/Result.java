@@ -1,13 +1,23 @@
 
 package com.assignment.rickandmorty.repository.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Result implements Serializable {
 
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    @NonNull
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -26,15 +36,21 @@ public class Result implements Serializable {
     @SerializedName("gender")
     @Expose
     private String gender;
+
+    @Ignore
     @SerializedName("origin")
     @Expose
     private Origin origin;
+
+    @Ignore
     @SerializedName("location")
     @Expose
     private Location location;
     @SerializedName("image")
     @Expose
     private String image;
+
+    @Ignore
     @SerializedName("episode")
     @Expose
     private List<String> episode;

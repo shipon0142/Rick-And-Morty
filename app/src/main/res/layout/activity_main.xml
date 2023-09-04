@@ -8,105 +8,128 @@
     tools:context=".view.SplashActivity">
 
     <LinearLayout
+        android:id="@+id/mainLL"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:gravity="center|start"
-        android:orientation="horizontal"
-        android:paddingStart="20dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@mipmap/ic_launcher" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:gravity="center|start"
+            android:orientation="horizontal"
+            android:paddingStart="20dp">
 
-        <com.assignment.rickandmorty.utils.CustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/rick_and_morty"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@mipmap/ic_launcher" />
 
-    </LinearLayout>
+            <com.assignment.rickandmorty.utils.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/rick_and_morty"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/search_background"
-        android:gravity="center|start"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp">
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:padding="3dp"
-                android:src="@drawable/search_icon" />
-
+            android:layout_margin="20dp"
+            android:background="@drawable/search_background"
+            android:gravity="center|start"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.assignment.rickandmorty.utils.CustomFontEditText
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:padding="3dp"
+                    android:src="@drawable/search_icon" />
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:background="@color/gray1"
-                    android:hint="@string/search"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:paddingStart="5dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
-                    android:textSize="13dp" />
+                    android:orientation="horizontal">
+
+                    <com.assignment.rickandmorty.utils.CustomFontEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:background="@color/gray2"
+                        android:hint="@string/search"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:paddingStart="5dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:textColor="@color/gray"
+                        android:textColorHint="@color/gray"
+                        android:textSize="13dp" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.assignment.rickandmorty.view.ExpandableHeightGridView
+                        android:id="@+id/characterGV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="3"
+                        android:verticalSpacing="10dp" />
+
+                    <ProgressBar
+                        android:id="@+id/loadMorePB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
         </LinearLayout>
     </LinearLayout>
-
     <LinearLayout
+        android:id="@+id/loadingLL"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.assignment.rickandmorty.view.ExpandableHeightGridView
-                    android:id="@+id/characterGV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:horizontalSpacing="10dp"
-                    android:numColumns="3"
-                    android:verticalSpacing="10dp" />
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        <include layout="@layout/simmer_list_page_loading" />
     </LinearLayout>
 </LinearLayout>

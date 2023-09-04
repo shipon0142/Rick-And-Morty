@@ -20,23 +20,26 @@ public class ApiManager {
     public ApiManager() {
         apiService = RetrofitAPIClient.getApiClient();
     }
-    public MutableLiveData<Character> getAllCharecters() {
-        MutableLiveData<Character> data = new MutableLiveData<>();
+    public interface CharacterListCallBack{
+        public void getharacterList(Response<Character> response);
+    }
 
-        apiService.fetchCharacters().enqueue(new Callback<Character>() {
+    public void getAllCharecters(int page,CharacterListCallBack characterListCallBack) {
+
+        apiService.fetchCharacters(page).enqueue(new Callback<Character>() {
             @Override
             public void onResponse(@NonNull Call<Character> call, @NonNull Response<Character> response) {
                 assert response.body() != null;
-                data.setValue(response.body());
+                characterListCallBack.getharacterList(response);
             }
 
             @Override
             public void onFailure(@NonNull Call<Character> call, @NonNull Throwable t) {
-
+                characterListCallBack.getharacterList(null);
             }
         });
 
-        return data;
+
     }
     public MutableLiveData<Result> getCharecterDetails(int id) {
         MutableLiveData<Result> data = new MutableLiveData<>();

@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical"
+                android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp">
 
@@ -53,6 +54,22 @@
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold" />
+
+                <com.assignment.rickandmorty.utils.CustomFontTextView
+                    android:id="@+id/statusTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/status_alive_background"
+                    android:maxLines="1"
+                    android:paddingStart="15dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="3dp"
+                    android:text="Alive"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"/>
+
 
             </LinearLayout>
 
