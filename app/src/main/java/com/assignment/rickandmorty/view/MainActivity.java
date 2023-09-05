@@ -36,15 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
         init();
+        retriveCharacterData();
         mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         mainActivityViewModel.getItems().observe(this, items -> {
             if (items == null) return;
-            saveCharacterList(items.getResults());
-            binding.mainLL.setVisibility(View.VISIBLE);
-            binding.loadingLL.setVisibility(View.GONE);
+            if (items.getInfo().getPrev() == null) {
+                characters.clear();
+                characters.addAll(items.getResults());
+            } else {
+                characters.addAll(items.getResults());
+            }
             NEXT_PAGE_URL = items.getInfo().getNext();
-            characters.addAll(items.getResults());
-            characterGridAdapter.notifyDataSetChanged();
+            saveCharacterList(items.getResults());
+            setAllValue(items.getResults());
         });
         mainActivityViewModel.getLoading().observe(this, isLoading -> {
 
@@ -53,6 +57,23 @@ public class MainActivity extends AppCompatActivity {
 
         });
         setScrollViewObserver();
+    }
+
+    private void setAllValue(ArrayList<Result> results) {
+        binding.mainLL.setVisibility(View.VISIBLE);
+        binding.loadingLL.setVisibility(View.GONE);
+        characterGridAdapter.notifyDataSetChanged();
+    }
+
+    private void retriveCharacterData() {
+        CharacterDatabaseClient.getInstance(this).retrieveCharacterList(new CharacterDatabaseClient.RetriveCharactersCallback() {
+            @Override
+            public void onCharactersRetrieved(ArrayList<Result> characterList) {
+                Log.d("characters_size", "" + characters.size());
+                characters.addAll(characterList);
+                setAllValue(characters);
+            }
+        });
     }
 
     private void setScrollViewObserver() {
@@ -83,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveCharacterList(ArrayList<Result> results) {
         CharacterDatabaseClient.getInstance(this).saveCharacterList(results, new CharacterDatabaseClient.SavedCharacterSuccessCallback() {
             @Override
-            public void hasSaccess( List<Result> resultList) {
+            public void hasSaccess(ArrayList<Result> resultList) {
 
             }
         });

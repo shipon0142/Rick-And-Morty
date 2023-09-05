@@ -8,16 +8,17 @@ import androidx.room.Database;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.assignment.rickandmorty.repository.model.Character;
 import com.assignment.rickandmorty.repository.model.Result;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.http.Query;
 
 
 public class CharacterDatabaseClient {
@@ -56,7 +57,7 @@ public class CharacterDatabaseClient {
         return characterDatabase;
     }
 
-    @Database(entities = {Result.class}, version = 1)
+    @Database(entities = {Result.class}, version = 3)
     public abstract static class CharacterDatabaseHelper extends RoomDatabase {
         public abstract CharacterDao characterDao();
     }
@@ -64,22 +65,23 @@ public class CharacterDatabaseClient {
     @androidx.room.Dao
     public interface CharacterDao {
         @Insert(onConflict = OnConflictStrategy.REPLACE)
-        void insert(List<Result> characters);
+        void insert(ArrayList<Result> characters);
 
-
+        @Query("SELECT * FROM character")
+        List<Result> getAllCharacters();
     }
 
     public interface SavedCharacterSuccessCallback {
-        public void hasSaccess(List<Result> character);
+        public void hasSaccess(ArrayList<Result> character);
     }
 
 
-    public void saveCharacterList(List<Result> character, SavedCharacterSuccessCallback savedCharacterSuccessCallback) {
+    public void saveCharacterList(ArrayList<Result> character, SavedCharacterSuccessCallback savedCharacterSuccessCallback) {
         @SuppressLint("StaticFieldLeak")
         class SaveCharacters extends AsyncTask<Void, Void, Void> {
-            private final List<Result> character;
+            private final ArrayList<Result> character;
 
-            SaveCharacters(List<Result> character) {
+            SaveCharacters(ArrayList<Result> character) {
                 this.character = character;
             }
 
@@ -114,6 +116,35 @@ public class CharacterDatabaseClient {
         new SaveCharacters(character).execute();
     }
 
+    public interface RetriveCharactersCallback {
+        public void onCharactersRetrieved(ArrayList<Result> characters);
+    }
+    public void retrieveCharacterList(RetriveCharactersCallback retriveCharactersCallback) {
+        @SuppressLint("StaticFieldLeak")
+        class RetrieveCharacters extends AsyncTask<Void, Void, ArrayList<Result>> {
+            @Override
+            protected ArrayList<Result> doInBackground(Void... voids) {
+                try {
+                    CharacterDao characterDao = CharacterDatabaseClient.getInstance(getContext())
+                            .getCharacterDatabase()
+                            .characterDao();
+                    List<Result> characters = characterDao.getAllCharacters();
+                    ArrayList<Result> characterArrayList = new ArrayList<>(characters);
+                    return characterArrayList;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Result> characters) {
+                super.onPostExecute(characters);
+                retriveCharactersCallback.onCharactersRetrieved(characters);
+            }
+        }
+
+        new RetrieveCharacters().execute();
+    }
 
 }
 
