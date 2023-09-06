@@ -1,4 +1,4 @@
-package com.assignment.rickandmorty.view;
+package com.assignment.rickandmorty.view.activity;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -7,18 +7,24 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.assignment.rickandmorty.R;
 import com.assignment.rickandmorty.data.roomdatabase.CharacterDatabaseClient;
 import com.assignment.rickandmorty.databinding.ActivityMainBinding;
 import com.assignment.rickandmorty.repository.model.Result;
+import com.assignment.rickandmorty.utils.Util;
+import com.assignment.rickandmorty.view.adapter.CharacterGridAdapter;
 import com.assignment.rickandmorty.viewmodel.MainActivityViewModel;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 public class MainActivity extends AppCompatActivity {
     MainActivityViewModel mainActivityViewModel;
@@ -33,10 +39,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
         init();
         retriveCharacterData();
+        setListener();
+        setScrollViewObserver();
+    }
+
+    private void setListener() {
         mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         mainActivityViewModel.getItems().observe(this, items -> {
             if (items == null) return;
@@ -56,12 +66,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
-        setScrollViewObserver();
+        binding.refreshLL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!Util.hasInternet(MainActivity.this)) {
+                    Toast.makeText(MainActivity.this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    binding.refreshLL.setRefreshing(false);
+                    return;
+                }
+                mainActivityViewModel.refreshPage(1);
+            }
+        });
     }
 
     private void setAllValue(ArrayList<Result> results) {
         binding.mainLL.setVisibility(View.VISIBLE);
         binding.loadingLL.setVisibility(View.GONE);
+        binding.refreshLL.setRefreshing(false);
         characterGridAdapter.notifyDataSetChanged();
     }
 
@@ -69,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         CharacterDatabaseClient.getInstance(this).retrieveCharacterList(new CharacterDatabaseClient.RetriveCharactersCallback() {
             @Override
             public void onCharactersRetrieved(ArrayList<Result> characterList) {
-                Log.d("characters_size", "" + characters.size());
+                Log.d("characters_size", "" + characterList.size());
                 characters.addAll(characterList);
                 setAllValue(characters);
             }

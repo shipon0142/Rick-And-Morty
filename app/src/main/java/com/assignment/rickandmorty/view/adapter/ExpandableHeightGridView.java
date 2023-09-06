@@ -1,4 +1,4 @@
-package com.assignment.rickandmorty.view;
+package com.assignment.rickandmorty.view.adapter;
 
 import android.content.Context;
 import android.util.AttributeSet;

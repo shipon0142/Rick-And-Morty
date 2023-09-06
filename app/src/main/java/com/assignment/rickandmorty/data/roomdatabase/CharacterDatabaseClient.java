@@ -11,10 +11,12 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.assignment.rickandmorty.repository.model.Character;
+import com.assignment.rickandmorty.repository.model.LocationConverter;
+import com.assignment.rickandmorty.repository.model.OriginConverter;
 import com.assignment.rickandmorty.repository.model.Result;
 
 import java.util.ArrayList;
@@ -57,7 +59,8 @@ public class CharacterDatabaseClient {
         return characterDatabase;
     }
 
-    @Database(entities = {Result.class}, version = 3)
+    @Database(entities = {Result.class}, version = 4)
+    @TypeConverters({LocationConverter.class, OriginConverter.class})
     public abstract static class CharacterDatabaseHelper extends RoomDatabase {
         public abstract CharacterDao characterDao();
     }
@@ -105,13 +108,6 @@ public class CharacterDatabaseClient {
                 return null;
             }
 
-           /*
-           @Override
-            protected void onPostExecute() {
-                super.onPostExecute(null);
-
-                savedCharacterSuccessCallback.hasSaccess( character);
-            }*/
         }
         new SaveCharacters(character).execute();
     }
@@ -119,6 +115,7 @@ public class CharacterDatabaseClient {
     public interface RetriveCharactersCallback {
         public void onCharactersRetrieved(ArrayList<Result> characters);
     }
+
     public void retrieveCharacterList(RetriveCharactersCallback retriveCharactersCallback) {
         @SuppressLint("StaticFieldLeak")
         class RetrieveCharacters extends AsyncTask<Void, Void, ArrayList<Result>> {

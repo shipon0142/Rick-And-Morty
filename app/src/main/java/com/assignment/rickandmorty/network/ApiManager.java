@@ -1,6 +1,5 @@
 package com.assignment.rickandmorty.network;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -20,17 +19,26 @@ public class ApiManager {
     public ApiManager() {
         apiService = RetrofitAPIClient.getApiClient();
     }
-    public interface CharacterListCallBack{
+
+    public interface CharacterListCallBack {
         public void getharacterList(Response<Character> response);
     }
 
-    public void getAllCharecters(int page,CharacterListCallBack characterListCallBack) {
+    public interface CharacterCallBack {
+        public void onCharacterCallback(Response<Result> result);
+    }
+
+    public void getAllCharecters(int page, CharacterListCallBack characterListCallBack) {
 
         apiService.fetchCharacters(page).enqueue(new Callback<Character>() {
             @Override
             public void onResponse(@NonNull Call<Character> call, @NonNull Response<Character> response) {
-                assert response.body() != null;
-                characterListCallBack.getharacterList(response);
+                if (response.code() == 200) {
+                    assert response.body() != null;
+                    characterListCallBack.getharacterList(response);
+                } else {
+                    characterListCallBack.getharacterList(null);
+                }
             }
 
             @Override
@@ -41,24 +49,25 @@ public class ApiManager {
 
 
     }
-    public MutableLiveData<Result> getCharecterDetails(int id) {
+
+    public void getCharecterDetails(int id, CharacterCallBack characterCallBack) {
         MutableLiveData<Result> data = new MutableLiveData<>();
 
         apiService.fetchCharacterDetails(id).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
-                if(response.code()==200) {
+                if (response.code() == 200) {
                     assert response.body() != null;
                     data.setValue(response.body());
+                    characterCallBack.onCharacterCallback(response);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-
+                characterCallBack.onCharacterCallback(null);
             }
         });
 
-        return data;
     }
 }

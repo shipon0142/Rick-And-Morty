@@ -1,4 +1,4 @@
-package com.assignment.rickandmorty.view;
+package com.assignment.rickandmorty.view.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,6 +16,8 @@ import com.assignment.rickandmorty.R;
 import com.assignment.rickandmorty.databinding.AdapterCharecterBinding;
 import com.assignment.rickandmorty.repository.model.Result;
 import com.assignment.rickandmorty.utils.StatusColorCode;
+import com.assignment.rickandmorty.view.activity.CharacterDetailsActivity;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,6 +85,7 @@ public class CharacterGridAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, CharacterDetailsActivity.class);
                 intent.putExtra("character_id", results.get(position).getId());
+                intent.putExtra("character", new Gson().toJson(results.get(position)));
                 context.startActivity(intent);
             }
         });

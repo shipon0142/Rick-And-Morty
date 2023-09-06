@@ -1,6 +1,8 @@
 
 package com.assignment.rickandmorty.repository.model;
 
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -37,12 +39,10 @@ public class Result implements Serializable {
     @Expose
     private String gender;
 
-    @Ignore
     @SerializedName("origin")
     @Expose
     private Origin origin;
 
-    @Ignore
     @SerializedName("location")
     @Expose
     private Location location;
