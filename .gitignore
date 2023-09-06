@@ -7,9 +7,6 @@
 .gradle/
 build/
 
-# Gradle Wrapper
-gradle-wrapper.properties
-gradle-wrapper.jar
 
 # Android
 local.properties
